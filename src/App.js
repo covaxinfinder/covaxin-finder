@@ -28,7 +28,8 @@ const App = () => {
     };
   }, []);
 
-  const fetchAllResult = ({pincode, email}) => {
+  const fetchAllResult = ({pincode, email, age_limit}) => {
+    console.log("AGE limit ", age_limit);
     setEmail(email);
     let getCurrentDate = () => {
       const pad = (s) => (s < 10) ? '0' + s : s;
@@ -66,9 +67,16 @@ const App = () => {
             delete centerCpy['to'];
             center.sessions.forEach(session => {
               if (session.available_capacity > 0) {
-                delete session['session_id'];
-                delete session['slots'];
-                centerCpy.sessions.push(session);
+                let _session = {...session};
+                delete _session['session_id'];
+                delete _session['slots'];
+                if (age_limit === 'on') {
+                  centerCpy.sessions.push(_session);
+                } else if (age_limit === '18' && session.min_age_limit === 18) {
+                  centerCpy.sessions.push(_session);
+                } else if (age_limit === '45' && session.min_age_limit === 45) {
+                  centerCpy.sessions.push(_session);
+                }
               }
             })
             if (centerCpy.sessions.length > 0) {
@@ -81,6 +89,7 @@ const App = () => {
         setAvailaleCenters(availableSlots);
         if (availableSlots.length) {
           // Add logic to send email or do something else
+
           try {
             new Notification('Vaccine is available!',{
               body: 'Happy Vaccine! Book ASAP'
@@ -172,6 +181,38 @@ const App = () => {
           <h2>This site helps you to find vaccinations from the given pincode by auto sync every {timeGap} minutes.<br /> Mail notification will be sent.</h2>
           <form onSubmit={handleSubmit(onSubmit)} className="form-inline">
             <div className="form-group mt-2">
+              <div>
+                <label className="mr-2">
+                  <input
+                    type="radio"
+                    className="form-control"
+                    name="age_limit"
+                    ref={register}
+                    defaultChecked={true}
+                  />
+                  <span>All ages</span>
+                </label>
+                <label className="mr-2">
+                  <input
+                    type="radio"
+                    className="form-control"
+                    name="age_limit"
+                    ref={register}
+                    value="18"
+                  />
+                  <span>Only 18+</span>
+                </label>
+                <label className="mr-2">
+                  <input
+                    type="radio"
+                    className="form-control"
+                    name="age_limit"
+                    ref={register}
+                    value="45"
+                  />
+                  <span>Only 45+</span>
+                </label>
+              </div>
               <label className="mr-2">
                 Email to notify :
               </label>
@@ -264,7 +305,6 @@ const App = () => {
             </>
             )
         }
-        <small style={{position: 'fixed', bottom: '5px', right: '5px'}}>Created by Dhanasekar & UI GEMS youtube channel</small>
     </div>
   );
 }

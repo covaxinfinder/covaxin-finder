@@ -34,7 +34,7 @@ export const HospitalsTable = ({allCenters, heading}) => {
                         {
                           center.sessions.map((session, idx) => {
                             return (
-                              <tr key={session.session_id + idx}>
+                              <tr key={session.date + session.session_id + idx}>
                                 <td style={{'border': `1px solid ${session.available_capacity > 0 ? 'red' : '#ccc'}`}}>{session.available_capacity}</td>
                                 <td>{session.min_age_limit}+</td>
                                 <td>{session.vaccine}</td>
