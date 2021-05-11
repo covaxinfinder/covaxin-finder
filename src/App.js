@@ -87,9 +87,8 @@ const App = () => {
 
         setAllCenters(allCenter);
         setAvailaleCenters(availableSlots);
-        if (availableSlots.length) {
+        if (availableSlots.length && email) {
           // Add logic to send email or do something else
-
           try {
             new Notification('Vaccine is available!',{
               body: 'Happy Vaccine! Book ASAP'
@@ -214,7 +213,7 @@ const App = () => {
                 </label>
               </div>
               <label className="mr-2">
-                Email to notify :
+                Email to notify (optional) :
               </label>
               <input
                 type="text"
@@ -222,7 +221,6 @@ const App = () => {
                 name={`email`}
                 ref={register}
                 placeholder="Enter your email address"
-                required={true}
               />
             </div>
             <div className="form-area">
